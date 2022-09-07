@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -11,22 +12,33 @@
         app:layout_constraintBaseline_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginTop="5sp"
+            android:layout_marginLeft="5sp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
             <TextView
                 android:id="@+id/codeLine"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginRight="30sp"
                 android:text="코드 라인"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                app:layout_constraintRight_toLeftOf="@+id/itemDeleteBtn"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/itemDeleteBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="삭제"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:layout_marginLeft="30sp"
+                android:background="@drawable/ic_cancel"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/codeLine" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

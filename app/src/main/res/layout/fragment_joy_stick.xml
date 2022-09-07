@@ -10,15 +10,17 @@
         android:id="@+id/joyStick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        custom:JV_buttonColor="#FF6E40"
-        custom:JV_buttonSizeRatio="15%"
-        custom:JV_borderColor="#00796B"
-        custom:JV_backgroundColor="#009688"
+        custom:JV_buttonColor="#FF0000"
+        custom:JV_buttonSizeRatio="30%"
+        custom:JV_borderColor="#000000"
+        custom:JV_backgroundColor="#393939"
         custom:JV_borderWidth="4dp"
-        custom:JV_fixedCenter="false"/>
+        custom:JV_fixedCenter="false"
+        android:layout_gravity="center"/>
 
     <TextView
         android:id="@+id/status"
+        android:textSize="30sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView" />

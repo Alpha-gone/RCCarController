@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".CodeBlock">
 
 
@@ -14,46 +14,89 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/codeList"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="300dp"
 
-        <Button
-            android:id="@+id/front"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="front"
-            app:layout_constraintTop_toBottomOf="@id/codeList"
-            tools:layout_editor_absoluteX="0dp" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
 
-        <Button
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="back"
-            app:layout_constraintBaseline_toBottomOf="@id/front"
-            tools:layout_editor_absoluteY="319dp" />
+        <LinearLayout
+            android:id="@+id/buttonlist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/codeList"
+            tools:ignore="UnknownIdInLayout">
 
-        <Button
-            android:id="@+id/right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="right"
-            app:layout_constraintLeft_toRightOf="@id/back" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="left"
-            app:layout_constraintRight_toLeftOf="@id/back" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/startBtn"
+                    android:layout_width="60sp"
+                    android:layout_height="60sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/ic_baseline_play_circle_24"
+                    android:layout_marginTop="180sp"
+                    app:layout_constraintBottom_toTopOf="@+id/front"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/startBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="start"
-            tools:layout_editor_absoluteX="181dp"
-            tools:layout_editor_absoluteY="594dp" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/front"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="front"
+                    android:background="@drawable/btn_background"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/startBtn"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="back"
+                    android:layout_marginTop="40sp"
+                    android:background="@drawable/btn_background"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/front" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="left"
+                    android:background="@drawable/btn_background"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@+id/back"
+                    app:layout_constraintTop_toBottomOf="@+id/front" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="right"
+                    android:background="@drawable/btn_background"
+                    app:layout_constraintLeft_toRightOf="@+id/back"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/front" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+        </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
