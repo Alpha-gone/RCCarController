@@ -12,40 +12,29 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 
 public class CodeBlock extends Fragment {
     private RecyclerView codeList;
     private Button front, back, right, left, start;
     private BlockListAdapter adapter;
-    private ArrayList<String> codes;
+    private List<String> codes;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup viewGroup = (ViewGroup) inflater
                 .inflate(R.layout.fragment_code_block, container, false);
+
         init(viewGroup);
         setLayoutManager();
 
-        front.setOnClickListener(view -> {
-            codes.add(front.getText().toString());
-            adapter.notifyItemInserted(adapter.getItemCount() - 1);
-        });
-
-        back.setOnClickListener(view -> {
-            codes.add(back.getText().toString());
-            adapter.notifyItemInserted(adapter.getItemCount() - 1);
-        });
-
-        right.setOnClickListener(view -> {
-            codes.add(right.getText().toString());
-            adapter.notifyItemInserted(adapter.getItemCount() - 1);
-        });
-
-        left.setOnClickListener(view -> {
-            codes.add(left.getText().toString());
-            adapter.notifyItemInserted(adapter.getItemCount() - 1);
-        });
+        front.setOnClickListener(view -> updateList(front));
+        back.setOnClickListener(view -> updateList(back));
+        right.setOnClickListener(view -> updateList(right));
+        left.setOnClickListener(view -> updateList(left));
 
 
         return viewGroup;
@@ -61,15 +50,18 @@ public class CodeBlock extends Fragment {
 
         codes = new ArrayList<>();
         adapter = new BlockListAdapter(codes);
-
-
-
     }
 
     private void setLayoutManager(){
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         codeList.setLayoutManager(manager);
         codeList.setAdapter(adapter);
+    }
+
+    private void updateList(Button button){
+        codes.add(button.getText().toString().toUpperCase());
+        adapter.notifyItemInserted(adapter.getItemCount());
+        codeList.scrollToPosition(adapter.getItemCount() - 1);
     }
 
 

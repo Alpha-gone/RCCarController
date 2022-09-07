@@ -10,11 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class BlockListAdapter extends RecyclerView.Adapter<BlockListAdapter.CodeItemHolder> {
-    private ArrayList<String> codes;
+    private List<String> codes;
 
-    public BlockListAdapter(ArrayList<String> codes) {
+    public BlockListAdapter(List<String> codes) {
         this.codes = codes;
     }
 
@@ -32,6 +34,12 @@ public class BlockListAdapter extends RecyclerView.Adapter<BlockListAdapter.Code
         String code = codes.get(position);
 
         holder.codeLine.setText(code);
+
+        holder.itemDeleteBtn.setOnClickListener(view -> {
+            codes.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, getItemCount());
+        });
     }
 
     @Override
@@ -47,6 +55,7 @@ public class BlockListAdapter extends RecyclerView.Adapter<BlockListAdapter.Code
             super(view);
             codeLine = view.findViewById(R.id.codeLine);
             itemDeleteBtn = view.findViewById(R.id.itemDeleteBtn);
+
         }
     }
 }
