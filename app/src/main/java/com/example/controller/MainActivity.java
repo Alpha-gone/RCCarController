@@ -11,7 +11,7 @@ public class MainActivity extends AppCompatActivity {
     private JoyStick joyStick;
     private CodeBlock codeBlock;
     private BottomNavigationView menu;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,12 +19,12 @@ public class MainActivity extends AppCompatActivity {
 
         init();
 
-        containerReplace(codeBlock);
+        isContainerReplaceSuccess(codeBlock);
 
         menu.setOnItemSelectedListener(item -> {
             switch (item.getItemId()){
-                case R.id.joyStick: containerReplace(joyStick); return true;
-                case R.id.codeBlock: containerReplace(codeBlock); return true;
+                case R.id.joyStick: return isContainerReplaceSuccess(joyStick);
+                case R.id.codeBlock: return isContainerReplaceSuccess(codeBlock);
             }
             return false;
         });
@@ -36,10 +36,12 @@ public class MainActivity extends AppCompatActivity {
         menu = findViewById(R.id.menu);
     }
 
-    private void containerReplace(Fragment fragment){
+    private boolean isContainerReplaceSuccess(Fragment fragment){
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.controlContainer, fragment)
                 .commit();
+
+        return true;
     }
 }
