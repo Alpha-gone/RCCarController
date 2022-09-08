@@ -11,7 +11,7 @@ public class MainActivity extends AppCompatActivity {
     private JoyStick joyStick;
     private CodeBlock codeBlock;
     private BottomNavigationView menu;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
