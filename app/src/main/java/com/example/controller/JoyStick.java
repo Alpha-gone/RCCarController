@@ -7,27 +7,34 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.controller.rest.ControlData;
 import com.example.controller.rest.ControlService;
+import com.example.controller.rest.RetrofitHelper;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import io.github.controlwear.virtual.joystick.android.JoystickView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.observers.DisposableObserver;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class JoyStick extends Fragment {
     private JoystickView joystick;
-    private TextView textView;
     private Button breakBtn;
-    private Retrofit retrofit;
-    private ControlService service;
+    private RetrofitHelper helper;
+    private Disposable disposable;
+
+    public JoyStick(RetrofitHelper helper) {
+        this.helper = helper;
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -37,60 +44,75 @@ public class JoyStick extends Fragment {
 
         init(viewGroup);
 
-        joystick.setOnMoveListener((angle, strength) ->{
-                    double steering = (strength != 0) ? getSteering(angle) : 0;
-                    String focus = (angle != 0 && strength != 0) ? getFocus(angle) : "break";
+        disposable = getMoveEventObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .mergeWith(getBreakEventObservable())
+                .debounce(100L, TimeUnit.MILLISECONDS)
+                .subscribeWith(getObserver());
 
-                    textView.setText("steering: " + steering + "| speed: " + strength +
-                            "| forcus: " + focus );
-
-
-                    service.sendControl((int)(strength * 0.3), steering, focus)
-                            .enqueue(new Callback<Void>() {
-                                @Override
-                                public void onResponse(Call<Void> call, Response<Void> response) {
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<Void> call, Throwable t) {
-
-                                }
-                            });
-                    }, 300);
-
-
-
-
-        breakBtn.setOnClickListener(view -> service.sendControl(0,0,"break").enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-
-            }
-        }));
         return viewGroup;
     }
 
     private void init(ViewGroup viewGroup){
         joystick = viewGroup.findViewById(R.id.joyStick);
-        textView = viewGroup.findViewById(R.id.status);
         breakBtn = viewGroup.findViewById(R.id.breakBtn);
     }
 
+    private Observable<ControlData> getMoveEventObservable(){
+        return Observable.create(emitter ->
+            joystick.setOnMoveListener(((angle, strength) -> {
+                double steering = (strength != 0) ? getSteering(angle) : 0;
+                String focus = (angle != 0 && strength != 0) ? getFocus(angle) : "break";
+
+                emitter.onNext(new ControlData(strength, steering, focus));
+            }))
+        );
+    }
+
+    private Observable<ControlData> getBreakEventObservable(){
+        return Observable.create(emitter -> breakBtn.setOnClickListener(view ->
+                emitter.onNext(new ControlData(0, 0, "break"))));
+    }
+
+    private DisposableObserver<ControlData> getObserver(){
+        return new DisposableObserver<ControlData>() {
+            @Override
+            public void onNext(@NonNull ControlData controlData) {
+                try {
+                    System.out.println("controlData = " + controlData);
+                    helper.joystickControl(controlData);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                Toast.makeText(getContext(), e.getLocalizedMessage(),
+                        Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+    }
+
     private double getSteering(int angle){
-        double steering = ((angle / 90.0) - getQuadrant(angle) - getDirection(angle))
+        double steering = (getAnglePer90(angle) - getQuadrant(angle) - getDirection(angle))
                 * getSign(angle);
 
         return Math.floor(steering * 10) /10.0;
     }
 
+    private double getAnglePer90(int angle){
+        return angle / 90.0;
+    }
+
     private int getQuadrant(int angle){
-        return angle / 90;
+        return (int)getAnglePer90(angle);
     }
 
     private int getDirection(int angle){
@@ -111,9 +133,9 @@ public class JoyStick extends Fragment {
         return (quadrant < 2) ? "forward" : "backward";
     }
 
-
-    public void setRetrofit(Retrofit retrofit){
-        this.retrofit = retrofit;
-        service = this.retrofit.create(ControlService.class);
+    @Override
+    public void onDestroy() {
+        disposable.dispose();
+        super.onDestroy();
     }
 }

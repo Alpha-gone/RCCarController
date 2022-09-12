@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.example.controller.rest.RetrofitHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private CodeBlock codeBlock;
     private BottomNavigationView menu;
     private String url;
+    private RetrofitHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +33,6 @@ public class MainActivity extends AppCompatActivity {
         init();
 
         isContainerReplaceSuccess(codeBlock);
-
-       joyStick.setRetrofit(new Retrofit.Builder()
-                .baseUrl("http://192.168.1.251:5000/")
-                .build());
 
         menu.setOnItemSelectedListener(item -> {
             switch (item.getItemId()){
@@ -46,8 +44,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init(){
-        joyStick = new JoyStick();
+        helper = new RetrofitHelper();
+
+        joyStick = new JoyStick(helper);
         codeBlock = new CodeBlock();
+
         menu = findViewById(R.id.menu);
     }
 
@@ -94,9 +95,7 @@ public class MainActivity extends AppCompatActivity {
                         case "3호차" : url = "253"; break;
                     }
 
-                    joyStick.setRetrofit(new Retrofit.Builder()
-                            .baseUrl("http://192.168.1." + url + ":5000/")
-                            .build());
+                    helper.setRetrofit(url);
                 }));
 
                 AlertDialog dialog = builder.create();
