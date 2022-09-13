@@ -44,19 +44,23 @@ public class JoyStick extends Fragment {
 
         init(viewGroup);
 
-        disposable = getMoveEventObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .sample(66L, TimeUnit.MILLISECONDS)
-                .subscribe(controlData -> helper.joystickControl(controlData),
-                        throwable -> Toast.makeText(getContext(), throwable.getLocalizedMessage(),
-                                Toast.LENGTH_LONG).show());
-
         return viewGroup;
     }
 
     private void init(ViewGroup viewGroup){
         joystick = viewGroup.findViewById(R.id.joyStick);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        disposable = getMoveEventObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .sample(66L, TimeUnit.MILLISECONDS)
+                .subscribe(controlData -> helper.joystickControl(controlData),
+                        throwable -> System.out.println(throwable.getLocalizedMessage()));
     }
 
     private Observable<ControlData> getMoveEventObservable(){
@@ -93,15 +97,11 @@ public class JoyStick extends Fragment {
     }
 
     private int getSign(int angle){
-        int quadrant = getQuadrant(angle);
-
-        return (quadrant < 2) ? -1 : 1;
+       return (getQuadrant(angle) < 2) ? -1 : 1;
     }
 
     private String getFocus(int angle){
-        int quadrant = getQuadrant(angle);
-
-        return (quadrant < 2) ? "forward" : "backward";
+        return (getQuadrant(angle) < 2) ? "forward" : "backward";
     }
 
     @Override

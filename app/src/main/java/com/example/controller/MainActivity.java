@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
                 String[] items = getResources().getStringArray(R.array.carList);
                 ArrayList<String> selectedItem = new ArrayList<>();
 
-                selectedItem.add(items[0]);
 
                 builder.setTitle("차량선택");
                 builder.setSingleChoiceItems(R.array.carList, checkedItemIdx, ((dialogInterface, i) -> {
