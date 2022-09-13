@@ -47,16 +47,16 @@ public class JoyStick extends Fragment {
         disposable = getMoveEventObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .mergeWith(getBreakEventObservable())
-                .debounce(100L, TimeUnit.MILLISECONDS)
-                .subscribeWith(getObserver());
+                .sample(66L, TimeUnit.MILLISECONDS)
+                .subscribe(controlData -> helper.joystickControl(controlData),
+                        throwable -> Toast.makeText(getContext(), throwable.getLocalizedMessage(),
+                                Toast.LENGTH_LONG).show());
 
         return viewGroup;
     }
 
     private void init(ViewGroup viewGroup){
         joystick = viewGroup.findViewById(R.id.joyStick);
-        breakBtn = viewGroup.findViewById(R.id.breakBtn);
     }
 
     private Observable<ControlData> getMoveEventObservable(){
@@ -65,40 +65,11 @@ public class JoyStick extends Fragment {
                 double steering = (strength != 0) ? getSteering(angle) : 0;
                 String focus = (angle != 0 && strength != 0) ? getFocus(angle) : "break";
 
-                emitter.onNext(new ControlData(strength, steering, focus));
-            }))
+                emitter.onNext(new ControlData((int)(strength * 0.15), steering, focus));
+            }),66)
         );
     }
 
-    private Observable<ControlData> getBreakEventObservable(){
-        return Observable.create(emitter -> breakBtn.setOnClickListener(view ->
-                emitter.onNext(new ControlData(0, 0, "break"))));
-    }
-
-    private DisposableObserver<ControlData> getObserver(){
-        return new DisposableObserver<ControlData>() {
-            @Override
-            public void onNext(@NonNull ControlData controlData) {
-                try {
-                    System.out.println("controlData = " + controlData);
-                    helper.joystickControl(controlData);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-                Toast.makeText(getContext(), e.getLocalizedMessage(),
-                        Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        };
-    }
 
     private double getSteering(int angle){
         double steering = (getAnglePer90(angle) - getQuadrant(angle) - getDirection(angle))
@@ -135,7 +106,7 @@ public class JoyStick extends Fragment {
 
     @Override
     public void onDestroy() {
-        disposable.dispose();
         super.onDestroy();
+        disposable.dispose();
     }
 }

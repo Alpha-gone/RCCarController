@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         helper = new RetrofitHelper();
 
         joyStick = new JoyStick(helper);
-        codeBlock = new CodeBlock();
+        codeBlock = new CodeBlock(helper);
 
         menu = findViewById(R.id.menu);
     }
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                         case "3호차" : url = "253"; break;
                     }
 
-                    helper.setRetrofit(url);
+                    helper.changeAddress(url);
                 }));
 
                 AlertDialog dialog = builder.create();
