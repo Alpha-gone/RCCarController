@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     private JoyStick joyStick;
     private CodeBlock codeBlock;
     private BottomNavigationView menu;
-    private String url;
     private RetrofitHelper helper;
 
     @Override
@@ -70,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int checkedItemIdx = 0;
+    private int address = 0;
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
@@ -87,14 +87,15 @@ public class MainActivity extends AppCompatActivity {
                     checkedItemIdx = i;
                 }) );
 
-                builder.setPositiveButton("OK", ((dialogInterface, i) -> {
+
+                builder.setPositiveButton("OK",((dialogInterface, i) -> {
                     switch (selectedItem.get(0)){
-                        case "1호차" : url = "251"; break;
-                        case "2호차" : url = "252"; break;
-                        case "3호차" : url = "253"; break;
+                        case "1호차" : address = 251; break;
+                        case "2호차" : address = 252; break;
+                        case "3호차" : address = 253; break;
                     }
 
-                    helper.changeAddress(url);
+                    helper.changeAddress(address);
                 }));
 
                 AlertDialog dialog = builder.create();

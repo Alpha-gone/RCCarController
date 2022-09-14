@@ -13,14 +13,10 @@ public class RetrofitHelper {
     private ControlService service;
 
     public RetrofitHelper() {
-        retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.251:5000/")
-                .build();
-
-        service = retrofit.create(ControlService.class);
+        changeAddress(251);
     }
 
-    public void changeAddress(String address) {
+    public void changeAddress(int address) {
         this.retrofit = new Retrofit.Builder()
                 .baseUrl("http://192.168.1." + address + ":5000/")
                 .build();
