@@ -38,33 +38,35 @@
                     android:id="@+id/startBtn"
                     android:layout_width="60sp"
                     android:layout_height="60sp"
-                    android:textColor="@color/white"
-                    android:background="@drawable/ic_baseline_play_circle_24"
                     android:layout_marginTop="180sp"
-                    app:layout_constraintTop_toBottomOf="@id/codeList"
+                    android:background="@drawable/ic_baseline_play_circle_24"
+                    android:textColor="@color/white"
                     app:layout_constraintBottom_toTopOf="@+id/front"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/codeList"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/front"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="front"
                     android:background="@drawable/btn_background"
+                    android:drawableBottom="@drawable/ic_top"
+                    android:paddingBottom="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/startBtn"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintTop_toTopOf="@+id/startBtn" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="back"
                     android:layout_marginTop="40sp"
                     android:background="@drawable/btn_background"
+                    android:drawableTop="@drawable/ic_bottom"
+                    android:paddingTop="15sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/front" />
@@ -72,9 +74,10 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/left"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="left"
+                    android:layout_height="65dp"
                     android:background="@drawable/btn_background"
+                    android:drawableRight="@drawable/ic_left"
+                    android:paddingRight="30sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/back"
                     app:layout_constraintTop_toBottomOf="@+id/front" />
@@ -82,18 +85,16 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/right"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="right"
+                    android:layout_height="65dp"
                     android:background="@drawable/btn_background"
+                    android:drawableLeft="@drawable/ic_right"
+                    android:paddingLeft="30sp"
                     app:layout_constraintLeft_toRightOf="@+id/back"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/front" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
 
 
         </LinearLayout>
