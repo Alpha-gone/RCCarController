@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 String[] items = getResources().getStringArray(R.array.carList);
                 ArrayList<String> selectedItem = new ArrayList<>();
 
+                selectedItem.add(items[0]);
 
                 builder.setTitle("차량선택");
                 builder.setSingleChoiceItems(R.array.carList, checkedItemIdx, ((dialogInterface, i) -> {
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                     switch (selectedItem.get(0)){
                         case "1호차" : address = 251; break;
                         case "2호차" : address = 252; break;
-                        case "3호차" : address = 253; break;
+                        case "3호차" : address = 250; break;
                     }
 
                     helper.changeAddress(address);

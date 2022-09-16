@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.controller.rest.RetrofitHelper;
 
+import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -35,7 +36,7 @@ public class CodeBlock extends Fragment {
     private RecyclerView codeList;
     private Button front, back, right, left, start;
     private BlockListAdapter adapter;
-    private List<String> codeArr;
+    private List<Direction> codeArr;
     private RetrofitHelper helper;
     private Disposable disposable;
 
@@ -70,7 +71,7 @@ public class CodeBlock extends Fragment {
         start = viewGroup.findViewById(R.id.startBtn);
 
         codeArr = new ArrayList<>();
-        adapter = new BlockListAdapter(codeArr);
+        adapter = new BlockListAdapter(codeArr, getContext());
     }
 
     private void setLayoutManager(){
@@ -80,9 +81,19 @@ public class CodeBlock extends Fragment {
     }
 
     private void updateList(Button button){
-        codeArr.add(button.getText().toString().toUpperCase());
+        codeArr.add(getDirection(button.getId()));
         adapter.notifyItemInserted(adapter.getItemCount());
         codeList.scrollToPosition(adapter.getItemCount() - 1);
+    }
+
+    private Direction getDirection(int id){
+        switch (id){
+            case R.id.front: return Direction.FRONT;
+            case R.id.left: return Direction.LEFT;
+            case R.id.right: return Direction.RIGHT;
+            case R.id.back: return Direction.BACK;
+        }
+        return null;
     }
 
     @Override
@@ -92,12 +103,14 @@ public class CodeBlock extends Fragment {
         disposable = getObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(codes -> {
+                .subscribe(query -> {
                    start.setEnabled(false);
                    start.setBackground(ContextCompat.
                             getDrawable(getContext(),R.drawable.ic_baseline_play_circle_filled_24));
 
-                   helper.getCodeBlockCall(codes).enqueue(new Callback<Void>() {
+                   Call<Void> call = helper.getCodeBlockCall(query);
+                            System.out.println(call.request());
+                   call.enqueue(new Callback<Void>() {
                        @Override
                        public void onResponse(Call<Void> call, Response<Void> response) {
                            if (response.isSuccessful()){
@@ -124,8 +137,8 @@ public class CodeBlock extends Fragment {
     private Observable<String> getObservable(){
         return Observable.create(emitter ->
             start.setOnClickListener(view -> {
-                StringBuilder builder = new StringBuilder();
-                codeArr.forEach(code -> builder.append(code.substring(0, 1).toLowerCase()));
+                StringBuilder builder = new StringBuilder("I");
+                codeArr.forEach(direction -> builder.append(direction.getQuery()));
 
                 emitter.onNext(builder.toString());
             })

@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             custom:JV_buttonColor="#FF0000"
-            custom:JV_buttonSizeRatio="30%"
+            custom:JV_buttonSizeRatio="25%"
             custom:JV_borderColor="#000000"
             custom:JV_backgroundColor="#393939"
             custom:JV_borderWidth="4dp"
