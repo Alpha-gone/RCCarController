@@ -1,7 +1,5 @@
 package com.example.controller;
 
-import android.graphics.drawable.Drawable;
-
 public enum Direction {
     FRONT("f", R.drawable.ic_top),
     RIGHT("r", R.drawable.ic_right),

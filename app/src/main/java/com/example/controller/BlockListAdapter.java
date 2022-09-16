@@ -12,9 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.sql.Driver;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class BlockListAdapter extends RecyclerView.Adapter<BlockListAdapter.CodeItemHolder> {

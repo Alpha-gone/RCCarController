@@ -14,9 +14,6 @@ import com.example.controller.rest.RetrofitHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
     private JoyStick joyStick;

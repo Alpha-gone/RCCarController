@@ -1,11 +1,7 @@
 package com.example.controller.rest;
 
 import java.io.IOException;
-
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class RetrofitHelper {
