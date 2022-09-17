@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.controller.rest.RetrofitHelper;
 
@@ -97,9 +99,8 @@ public class CodeBlock extends Fragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(query -> {
-                   start.setEnabled(false);
-                   start.setBackground(ContextCompat.
-                            getDrawable(getContext(),R.drawable.ic_baseline_play_circle_filled_24));
+                   setEnable(false);
+                   start.setBackground(setImg(R.drawable.ic_baseline_play_circle_filled_24));
 
                    Call<Void> call = helper.getCodeBlockCall(query);
                             System.out.println(call.request());
@@ -107,10 +108,8 @@ public class CodeBlock extends Fragment {
                        @Override
                        public void onResponse(Call<Void> call, Response<Void> response) {
                            if (response.isSuccessful()){
-                               start.setEnabled(true);
-                               start.setBackground(ContextCompat.
-                                       getDrawable(getContext(),
-                                               R.drawable.ic_baseline_play_circle_24));
+                               setEnable(true);
+                               start.setBackground(setImg(R.drawable.ic_baseline_play_circle_24));
 
                                adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
                                codeArr.clear();
@@ -120,7 +119,11 @@ public class CodeBlock extends Fragment {
 
                        @Override
                        public void onFailure(Call<Void> call, Throwable t) {
+                           setEnable(true);
+                           start.setBackground(setImg(R.drawable.ic_baseline_play_circle_24));
 
+                           Toast.makeText(getContext(), t.getLocalizedMessage(),
+                                   Toast.LENGTH_LONG).show();
                        }
                    });
                         },
@@ -138,6 +141,17 @@ public class CodeBlock extends Fragment {
         );
     }
 
+    private void setEnable(boolean bool){
+        Button[] buttons = new Button[]{start, front, back, left, right};
+
+        for (Button button : buttons) {
+            button.setEnabled(bool);
+        }
+    }
+
+    private Drawable setImg(int id){
+        return ContextCompat.getDrawable(getContext(), id);
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();

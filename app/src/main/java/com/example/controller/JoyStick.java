@@ -25,12 +25,16 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observers.DisposableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class JoyStick extends Fragment {
     private JoystickView joystick;
-    private Button breakBtn;
+    private Button initBtn;
     private RetrofitHelper helper;
     private Disposable disposable;
+    private TextView status;
 
     public JoyStick(RetrofitHelper helper) {
         this.helper = helper;
@@ -44,11 +48,30 @@ public class JoyStick extends Fragment {
 
         init(viewGroup);
 
+        initBtn.setOnClickListener(view -> {
+                    Call<Void> initCall = helper.getCodeBlockCall("I");
+                    System.out.println(initCall.request());
+
+                    initCall.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+
+                        }
+                    });
+                });
+
         return viewGroup;
     }
 
     private void init(ViewGroup viewGroup){
         joystick = viewGroup.findViewById(R.id.joyStick);
+        initBtn = viewGroup.findViewById(R.id.initBtn);
+        status = viewGroup.findViewById(R.id.status);
     }
 
     @Override
@@ -67,10 +90,11 @@ public class JoyStick extends Fragment {
         return Observable.create(emitter ->
             joystick.setOnMoveListener(((angle, strength) -> {
                 double steering = (strength != 0) ? getSteering(angle) : 0;
-                String focus = (angle != 0 && strength != 0) ? getFocus(angle) : "break";
+                String focus = (strength == 0 && angle == 0) ? "break" : getFocus(angle);
 
+                status.setText(angle + " | " + focus);
                 emitter.onNext(new ControlData((int)(strength * 0.15), steering, focus));
-            }),66)
+            }))
         );
     }
 
@@ -101,7 +125,8 @@ public class JoyStick extends Fragment {
     }
 
     private String getFocus(int angle){
-        return (getQuadrant(angle) < 2) ? "forward" : "backward";
+        return ((angle  >= 0 &&angle >= 358) || angle <= 182 ||
+                getQuadrant(angle) < 2) ? "forward" : "backward";
     }
 
     @Override

@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         init();
 
-        isContainerReplaceSuccess(codeBlock);
+        isContainerReplaceSuccess(joyStick);
 
         menu.setOnItemSelectedListener(item -> {
             switch (item.getItemId()){
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                     switch (selectedItem.get(0)){
                         case "1호차" : address = 251; break;
                         case "2호차" : address = 252; break;
-                        case "3호차" : address = 250; break;
+                        case "3호차" : address = 253; break;
                     }
 
                     helper.changeAddress(address);
