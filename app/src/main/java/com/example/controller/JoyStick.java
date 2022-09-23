@@ -34,7 +34,6 @@ public class JoyStick extends Fragment {
     private Button initBtn;
     private RetrofitHelper helper;
     private Disposable disposable;
-    private TextView status;
 
     public JoyStick(RetrofitHelper helper) {
         this.helper = helper;
@@ -48,30 +47,12 @@ public class JoyStick extends Fragment {
 
         init(viewGroup);
 
-        initBtn.setOnClickListener(view -> {
-                    Call<Void> initCall = helper.getCodeBlockCall("I");
-                    System.out.println(initCall.request());
-
-                    initCall.enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-
-                        }
-                    });
-                });
-
         return viewGroup;
     }
 
     private void init(ViewGroup viewGroup){
         joystick = viewGroup.findViewById(R.id.joyStick);
         initBtn = viewGroup.findViewById(R.id.initBtn);
-        status = viewGroup.findViewById(R.id.status);
     }
 
     @Override
@@ -81,52 +62,34 @@ public class JoyStick extends Fragment {
         disposable = getMoveEventObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .sample(66L, TimeUnit.MILLISECONDS)
+                .sample(5L, TimeUnit.MILLISECONDS)
                 .subscribe(controlData -> helper.joystickControl(controlData),
                         throwable -> System.out.println(throwable.getLocalizedMessage()));
+
+
+        initBtn.setOnClickListener(view -> {
+            Call<Void> initCall = helper.getCodeBlockCall("I");
+
+            initCall.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                }
+            });
+        });
     }
 
     private Observable<ControlData> getMoveEventObservable(){
         return Observable.create(emitter ->
             joystick.setOnMoveListener(((angle, strength) -> {
-                double steering = (strength != 0) ? getSteering(angle) : 0;
-                String focus = (strength == 0 && angle == 0) ? "break" : getFocus(angle);
-
-                status.setText(angle + " | " + focus);
-                emitter.onNext(new ControlData((int)(strength * 0.15), steering, focus));
+                emitter.onNext(new ControlData(strength, angle));
             }))
         );
-    }
-
-
-    private double getSteering(int angle){
-        double steering = (getAnglePer90(angle) - getQuadrant(angle) - getDirection(angle))
-                * getSign(angle);
-
-        return Math.floor(steering * 10) /10.0;
-    }
-
-    private double getAnglePer90(int angle){
-        return angle / 90.0;
-    }
-
-    private int getQuadrant(int angle){
-        return (int)getAnglePer90(angle);
-    }
-
-    private int getDirection(int angle){
-        int quadrant = getQuadrant(angle);
-
-        return (quadrant == 1 || quadrant == 3) ? 0 : 1;
-    }
-
-    private int getSign(int angle){
-       return (getQuadrant(angle) < 2) ? -1 : 1;
-    }
-
-    private String getFocus(int angle){
-        return ((angle  >= 0 &&angle >= 358) || angle <= 182 ||
-                getQuadrant(angle) < 2) ? "forward" : "backward";
     }
 
     @Override
